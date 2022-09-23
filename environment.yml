@@ -179,4 +179,3 @@ dependencies:
     - transformers==4.22.1
     - webencodings==0.5.1
     - zipp==3.8.1
-prefix: C:\Users\noahv\.conda\envs\dl4nlp
