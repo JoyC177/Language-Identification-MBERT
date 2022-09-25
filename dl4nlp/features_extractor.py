@@ -30,7 +30,7 @@ class FeaturesExtractor:
         self.unicode_categories = unicode_categories
 
     def process_sentence(self, paragraph: str):
-        features = []
+        features = [torch.empty(0)]
         if Feature.UNICODE_CATEGORY in self.features:
             features.append(self.unicode_features(paragraph))
 
