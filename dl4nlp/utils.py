@@ -2,10 +2,12 @@ import argparse
 import enum
 import os
 import random
+from contextlib import contextmanager
 from enum import Enum
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import skorch
 import torch
 from sklearn.metrics import accuracy_score
@@ -78,3 +80,11 @@ class EnumAction(argparse.Action):
         else:
             value = self._enum[values]
         setattr(namespace, self.dest, value)
+
+
+@contextmanager
+def pandas_set_option(option: str, value):
+    old_value = pd.get_option(option)
+    pd.set_option(option, value)
+    yield
+    pd.set_option(option, old_value)

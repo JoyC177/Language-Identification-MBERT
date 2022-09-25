@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import skorch
 import torch
 from sklearn.metrics import classification_report
@@ -19,6 +20,7 @@ from dl4nlp.utils import (
     EnumAction,
     Optimizer,
     WandbLogger,
+    pandas_set_option,
     seed_everything,
     skorch_accuracy,
 )
@@ -80,10 +82,28 @@ def train_eval(args, wandb_run):
     predictions = net.predict(data_module.test)
     pred_y = np.argmax(predictions, axis=-1)
     true_y = data_module.test.targets
-    eval_report = classification_report(
-        true_y, pred_y, target_names=data_module.classes, zero_division=0
+    eval_report = pd.DataFrame(
+        classification_report(
+            true_y,
+            pred_y,
+            target_names=data_module.classes,
+            zero_division=0,
+            output_dict=True,
+        )
+    ).T
+
+    wandb_run.log({"test/accuracy": eval_report.precision.accuracy})
+    wandb_run.log(
+        {
+            "test/classification_report": eval_report.reset_index().rename(
+                columns={"index": "lang"}
+            )
+        }
     )
-    print(eval_report)
+    with pandas_set_option("display.precision", 3), pandas_set_option(
+        "display.max_rows", None
+    ):
+        print(eval_report)
 
     return net
 
