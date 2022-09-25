@@ -192,6 +192,12 @@ def parse_args():
     group.add_argument(
         "--momentum", type=float, default=0.9, help="Optimizer's momentum"
     )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=13331,
+        help="Random seed",
+    )
 
     return parser.parse_args()
 
@@ -200,5 +206,5 @@ if __name__ == "__main__":
     args = parse_args()
     run = wandb.init(name=args.experiment_name, project="dl4nlp")
     wandb.config.update(args)
-    seed_everything(13331)
+    seed_everything(args.seed)
     train_eval(args, run)
