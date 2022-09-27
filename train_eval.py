@@ -16,7 +16,7 @@ import wandb
 from dl4nlp.dataset import DATASET_DIR, DataModule
 from dl4nlp.features_extractor import UNICODE_CATEGORIES, Feature, FeaturesExtractor
 from dl4nlp.models import probe
-from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL, XLMBERT_MODEL
+from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL, XLMBERT_MODEL, NUM_LAYERS
 from dl4nlp.utils import (
     DEVICE,
     EnumAction,
@@ -36,6 +36,7 @@ def train_eval(args, wandb_run):
         embeddings_dir=args.embeddings_dir,
         bert_batch_size=args.bert_batch_size,
         model_name=args.bert_model_name,
+        embeddings_layer=args.embeddings_layer,
     )
 
     print("Extracting features...")
@@ -147,6 +148,12 @@ def parse_args():
         type=Path,
         default=EMBEDDINGS_DIR,
         help="Path to the embeddings' directory",
+    )
+    group.add_argument(
+        "--embeddings-layer",
+        type=int,
+        default=NUM_LAYERS,
+        help="BERT's layer to extract embeddings from",
     )
 
     group = parser.add_argument_group("Features extraction")

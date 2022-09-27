@@ -12,6 +12,7 @@ MBERT_MODEL = "bert-base-multilingual-cased"
 XLMBERT_MODEL = "xlm-roberta-base"
 EMBEDDINGS_DIR = "embeddings/"
 EMBEDDINGS_FNAME = "{}_embeddings_{}.npy"
+NUM_LAYERS = 12
 
 
 def generate_bert_embeddings(
@@ -33,10 +34,10 @@ def generate_bert_embeddings(
             ).to(DEVICE)
             output = model(**encoded_input)
             # Take [CLS] token embedding
-            last_hidden_states = output[0][:, 0, :].cpu()
+            cls_embeddings = torch.stack(output.hidden_states)[:, :, 0, :].cpu()
             # Store the embeddings
-            embeddings.append(last_hidden_states)
-    return torch.concat(embeddings)
+            embeddings.append(cls_embeddings)
+    return torch.concat(embeddings, dim=1)
 
 
 def load_model(model_name: str = MBERT_MODEL) -> Tuple[BertModel, BertTokenizer]:
