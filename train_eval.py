@@ -4,9 +4,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import plotly
+import plotly.express as px
 import skorch
 import torch
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 from skorch import NeuralNet
 from skorch.helper import predefined_split
 
@@ -92,12 +94,26 @@ def train_eval(args, wandb_run):
         )
     ).T
 
-    wandb_run.log({"test/accuracy": eval_report.precision.accuracy})
-    wandb_run.log(
+    cm = confusion_matrix(true_y, pred_y)
+    cm_fig = px.imshow(
+        cm,
+        x=data_module.classes,
+        y=data_module.classes,
+        labels=dict(x="Predicted", y="Actual"),
+        width=2000,
+        height=2000,
+        color_continuous_scale=px.colors.sequential.Viridis,
+    )
+    wandb.log(
         {
+            "test/accuracy": eval_report.precision.accuracy,
             "test/classification_report": eval_report.reset_index().rename(
                 columns={"index": "lang"}
-            )
+            ),
+            "test/confusion_matrix_table": wandb.plot.confusion_matrix(
+                preds=pred_y, y_true=true_y, class_names=data_module.classes
+            ),
+            "test/confusion_matrix": wandb.Html(plotly.io.to_html(cm_fig)),
         }
     )
     with pandas_set_option("display.precision", 3), pandas_set_option(
