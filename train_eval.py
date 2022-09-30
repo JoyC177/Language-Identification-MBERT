@@ -19,6 +19,7 @@ from dl4nlp.utils import (
     DEVICE,
     EnumAction,
     Optimizer,
+    Activation,
     WandbLogger,
     pandas_set_option,
     seed_everything,
@@ -52,6 +53,8 @@ def train_eval(args, wandb_run):
         module__input_dim=data_module.num_features,
         module__output_dim=data_module.num_classes,
         module__hidden_dims=args.hidden_dims,
+        module__activation=args.activation,
+        module__dropout_prob=args.dropout_prob,
         criterion=torch.nn.CrossEntropyLoss,
         train_split=predefined_split(data_module.dev),
         max_epochs=1000,
@@ -158,7 +161,8 @@ def parse_args():
         "--bert-model-name",
         type=str,
         default=MBERT_MODEL,
-        help="Name of pretrained BERT model to use (e.g. 'xlm-roberta-base', 'bert-base-multilingual-cased')",
+        help="Name of pretrained BERT model to use (e.g. \
+            'xlm-roberta-base', 'bert-base-multilingual-cased')",
     )
 
     group = parser.add_argument_group("Classification model")
@@ -168,6 +172,20 @@ def parse_args():
         type=int,
         default=[],
         help="Dimensions of hidden layers for classification head",
+    )
+    group.add_argument(
+        "--activation",
+        type=Activation,
+        action=EnumAction,
+        default=Activation.ReLU,
+        help="The activation layer inbetween layers of the classifier",
+    )
+    group.add_argument(
+        "--dropout-prob",
+        type=float,
+        default=0.0,
+        help="For a dropout layer to the classifier model \
+            input a float between 0.1 and 1.0",
     )
     group.add_argument(
         "--batch-size",

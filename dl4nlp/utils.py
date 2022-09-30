@@ -53,6 +53,12 @@ class Optimizer(Enum):
     AdamW = torch.optim.AdamW
 
 
+class Activation(Enum):
+    ReLU = torch.nn.ReLU
+    Sigmoid = torch.nn.Sigmoid
+    Tanh = torch.nn.Tanh
+
+
 class EnumAction(argparse.Action):
     """
     Argparse action for handling Enums
