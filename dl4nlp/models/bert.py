@@ -11,7 +11,6 @@ from ..utils import DEVICE
 MBERT_MODEL = "bert-base-multilingual-cased"
 XLMBERT_MODEL = "xlm-roberta-base"
 EMBEDDINGS_DIR = "embeddings/"
-EMBEDDINGS_FNAME = "{}_embeddings_{}.npy"
 NUM_LAYERS = 12
 
 

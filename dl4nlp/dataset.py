@@ -8,7 +8,7 @@ import torch
 from torch.utils.data import Dataset
 
 from .models.bert import MBERT_MODEL, NUM_LAYERS, XLMBERT_MODEL, generate_bert_embeddings, \
-    load_model, EMBEDDINGS_FNAME
+    load_model
 
 
 DATASET_DIR = "data/wili-2018-split/"
@@ -17,7 +17,7 @@ TRAIN_FNAME = "train.csv"
 DEV_FNAME = "dev.csv"
 TEST_FNAME = "test.csv"
 LABELS_FNAME = "labels.csv"
-EMBEDDINGS_FNAME = "bert_embeddings_{}.h5"
+EMBEDDINGS_FNAME = "{}_embeddings_{}.h5"
 
 
 class DataModule:
