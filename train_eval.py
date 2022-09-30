@@ -14,7 +14,7 @@ import wandb
 from dl4nlp.dataset import DATASET_DIR, DataModule
 from dl4nlp.features_extractor import UNICODE_CATEGORIES, Feature, FeaturesExtractor
 from dl4nlp.models import probe
-from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL
+from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL, XLMBERT_MODEL
 from dl4nlp.utils import (
     DEVICE,
     EnumAction,
@@ -158,7 +158,7 @@ def parse_args():
         "--bert-model-name",
         type=str,
         default=MBERT_MODEL,
-        help="Name of pretrained BERT model to use",
+        help="Name of pretrained BERT model to use (e.g. 'xlm-roberta-base', 'bert-base-multilingual-cased')",
     )
 
     group = parser.add_argument_group("Classification model")

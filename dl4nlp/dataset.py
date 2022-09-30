@@ -6,7 +6,9 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from .models.bert import MBERT_MODEL, generate_bert_embeddings, load_model
+from .models.bert import MBERT_MODEL, XLMBERT_MODEL, generate_bert_embeddings, \
+    load_model, EMBEDDINGS_FNAME
+
 
 DATASET_DIR = "data/wili-2018-split/"
 EMBEDDINGS_DIR = "embeddings/"
@@ -14,7 +16,6 @@ TRAIN_FNAME = "train.csv"
 DEV_FNAME = "dev.csv"
 TEST_FNAME = "test.csv"
 LABELS_FNAME = "labels.csv"
-EMBEDDINGS_FNAME = "bert_embeddings_{}.npy"
 
 
 class DataModule:
@@ -104,7 +105,8 @@ class DataModule:
         del self.bert_tokenizer
 
     def _get_bert_embeddings(self, split_name: str, dataset: "WiliDataset"):
-        embeddings_file = self.embeddings_dir / EMBEDDINGS_FNAME.format(split_name)
+        embeddings_file = self.embeddings_dir / EMBEDDINGS_FNAME.format(self.model_name, split_name)
+        
         if embeddings_file.exists():
             embeddings = torch.from_numpy(np.load(embeddings_file))
             print(f"Loaded BERT embeddings from '{embeddings_file.absolute()}'")

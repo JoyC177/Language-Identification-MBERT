@@ -4,12 +4,14 @@ import torch
 from torch.utils.data import Dataset
 from tqdm.auto import tqdm
 from transformers import BertModel, BertTokenizer
+from transformers import XLMRobertaTokenizer, XLMRobertaModel
 
 from ..utils import DEVICE
 
 MBERT_MODEL = "bert-base-multilingual-cased"
+XLMBERT_MODEL = "xlm-roberta-base"
 EMBEDDINGS_DIR = "embeddings/"
-EMBEDDINGS_FNAME = "bert_embeddings_{}.npy"
+EMBEDDINGS_FNAME = "{}_embeddings_{}.npy"
 
 
 def generate_bert_embeddings(
@@ -38,7 +40,14 @@ def generate_bert_embeddings(
 
 
 def load_model(model_name: str = MBERT_MODEL) -> Tuple[BertModel, BertTokenizer]:
-    tokenizer = BertTokenizer.from_pretrained(model_name)
-    model = BertModel.from_pretrained(model_name).to(DEVICE)
+    if model_name == MBERT_MODEL:
+        tokenizer = BertTokenizer.from_pretrained(model_name)
+        model = BertModel.from_pretrained(model_name).to(DEVICE)
+    elif model_name == XLMBERT_MODEL:
+        tokenizer = XLMRobertaTokenizer.from_pretrained(model_name)
+        model = XLMRobertaModel.from_pretrained(model_name).to(DEVICE)
+    else:
+        raise ValueError("Invalid bert-model-name was provided,  \
+            try with 'xlm-roberta-base' or 'bert-base-multilingual-cased'")
 
     return model, tokenizer
