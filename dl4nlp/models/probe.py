@@ -3,7 +3,7 @@ import torch
 
 class ClassifierHead(torch.nn.Module):
     def __init__(
-        self, input_dim, output_dim, hidden_dims=None, activation=torch.nn.ReLU,
+        self, input_dim, output_dim, hidden_dims=None, activation=torch.nn.ReLU, 
         dropout_prob=0.0
     ):
         super().__init__()

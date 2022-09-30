@@ -32,8 +32,12 @@ def generate_bert_embeddings(
                 return_tensors="pt",
             ).to(DEVICE)
             output = model(**encoded_input)
-            # Take [CLS] token embedding
-            cls_embeddings = torch.stack(output.hidden_states)[:, :, 0, :].cpu()
+            #print(output)
+            # Take [CLS] token embedding of specific layers or the last one.
+            if output.hidden_states:
+                cls_embeddings = torch.stack(output.hidden_states)[:, :, 0, :].cpu()
+            else:
+                cls_embeddings = output.last_hidden_state[:, 0, :].cpu()
             # Store the embeddings
             embeddings.append(cls_embeddings)
     return torch.concat(embeddings, dim=1)
