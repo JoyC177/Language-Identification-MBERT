@@ -23,9 +23,9 @@ class ClassifierHead(torch.nn.Module):
         layers = []
         for i_dim, o_dim in zip(dims, dims[1:]):
             layers.append(torch.nn.Linear(i_dim, o_dim))
-            layers.append(self.activation())
+            layers.append(self.activation)
 
-            if self.Dropout_prob:
+            if self.dropout_prob:
                 layers.append(torch.nn.Dropout(self.dropout_prob))
         
         if self.dropout_prob:

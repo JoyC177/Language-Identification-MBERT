@@ -21,6 +21,7 @@ def generate_bert_embeddings(
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, shuffle=False
     )
+    layer_flag = None
     with torch.no_grad():
         embeddings = []
         # Loop over the sentences in batches
@@ -36,11 +37,17 @@ def generate_bert_embeddings(
             # Take [CLS] token embedding of specific layers or the last one.
             if output.hidden_states:
                 cls_embeddings = torch.stack(output.hidden_states)[:, :, 0, :].cpu()
+                layer_flag = True
             else:
                 cls_embeddings = output.last_hidden_state[:, 0, :].cpu()
+            
             # Store the embeddings
             embeddings.append(cls_embeddings)
-    return torch.concat(embeddings, dim=1)
+
+    if layer_flag:
+        return torch.concat(embeddings, dim=1)
+    else:
+        return torch.concat(embeddings)
 
 
 def load_model(model_name: str = MBERT_MODEL) -> Tuple[BertModel, BertTokenizer]:
