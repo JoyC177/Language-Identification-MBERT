@@ -1,12 +1,13 @@
 from pathlib import Path
 from typing import List, Union
 
+import h5py
 import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from .models.bert import MBERT_MODEL, XLMBERT_MODEL, generate_bert_embeddings, \
+from .models.bert import MBERT_MODEL, NUM_LAYERS, XLMBERT_MODEL, generate_bert_embeddings, \
     load_model, EMBEDDINGS_FNAME
 
 
@@ -16,6 +17,7 @@ TRAIN_FNAME = "train.csv"
 DEV_FNAME = "dev.csv"
 TEST_FNAME = "test.csv"
 LABELS_FNAME = "labels.csv"
+EMBEDDINGS_FNAME = "bert_embeddings_{}.h5"
 
 
 class DataModule:
@@ -26,12 +28,14 @@ class DataModule:
         bert_batch_size: int = 32,
         save_embeddings: bool = True,
         model_name: str = MBERT_MODEL,
+        embeddings_layer: int = NUM_LAYERS,
     ):
         self.data_dir = Path(data_dir)
         self.embeddings_dir = Path(embeddings_dir)
         self.bert_batch_size = bert_batch_size
         self.save_embeddings = save_embeddings
         self.model_name = model_name
+        self.embeddings_layer = embeddings_layer
         self.bert_embeddings = {}
         self.features_embeddings = {}
 
@@ -108,7 +112,8 @@ class DataModule:
         embeddings_file = self.embeddings_dir / EMBEDDINGS_FNAME.format(self.model_name, split_name)
         
         if embeddings_file.exists():
-            embeddings = torch.from_numpy(np.load(embeddings_file))
+            with h5py.File(embeddings_file, "r") as h5f:
+                embeddings = torch.from_numpy(h5f[f"l{self.embeddings_layer}"][:])
             print(f"Loaded BERT embeddings from '{embeddings_file.absolute()}'")
         else:
             print(
@@ -125,7 +130,10 @@ class DataModule:
             )
             if self.save_embeddings:
                 embeddings_file.parent.mkdir(exist_ok=True, parents=True)
-                np.save(embeddings_file, embeddings.cpu())
+                with h5py.File(embeddings_file, "w") as h5f:
+                    for l in range(len(embeddings)):
+                        layer = embeddings[l].cpu()
+                        h5f.create_dataset(f"l{l}", data=layer)
                 print(f"BERT embeddings saved to '{embeddings_file.absolute()}'")
 
         return embeddings
