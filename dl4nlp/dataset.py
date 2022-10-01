@@ -128,6 +128,7 @@ class DataModule:
             embeddings = generate_bert_embeddings(
                 self.bert_model, self.bert_tokenizer, dataset, self.bert_batch_size
             )
+
             if self.save_embeddings:
                 embeddings_file.parent.mkdir(exist_ok=True, parents=True)
                 with h5py.File(embeddings_file, "w") as h5f:
