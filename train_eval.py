@@ -1,4 +1,5 @@
 import argparse
+from locale import normalize
 import os
 import time
 from pathlib import Path
@@ -45,6 +46,7 @@ def train_eval(args, wandb_run):
     features_extractor = FeaturesExtractor(
         features=args.features,
         unicode_categories=args.unicode_categories,
+        normalize=args.normalize
     )
     data_module.init_features_embeddings(features_extractor)
 
@@ -175,6 +177,12 @@ def parse_args():
         type=str,
         default=UNICODE_CATEGORIES,
         help="Unicode categories to include in the features",
+    )
+    group.add_argument(
+        "--normalize",
+        type=bool,
+        default=True,
+        help="Normalise the Unicode categories to sentence ratios",
     )
 
     group = parser.add_argument_group("BERT model")

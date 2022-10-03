@@ -18,6 +18,7 @@ class FeaturesExtractor:
         self,
         features: Optional[List[Union[Feature, str]]] = None,
         unicode_categories: List[str] = UNICODE_CATEGORIES,
+        normalize = True
     ):
         if features is None:
             features = []
@@ -28,6 +29,7 @@ class FeaturesExtractor:
 
         self.features = features
         self.unicode_categories = unicode_categories
+        self.normalize = normalize
 
     def process_sentence(self, paragraph: str):
         features = [torch.empty(0)]
@@ -56,4 +58,7 @@ class FeaturesExtractor:
             data[idx] = count
 
         # normalize the data to percentage of the sentence exists of
-        return data / torch.sum(data)
+        if self.normalize:
+            return data / torch.sum(data)
+        else:
+            return data
