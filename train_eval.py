@@ -59,7 +59,7 @@ def train_eval(args, wandb_run):
         module__input_dim=data_module.num_features,
         module__output_dim=data_module.num_classes,
         module__hidden_dims=args.hidden_dims,
-        module__activation=args.activation,
+        module__activation=args.activation.value,
         module__dropout_prob=args.dropout_prob,
         criterion=torch.nn.CrossEntropyLoss,
         train_split=predefined_split(data_module.dev),
@@ -77,7 +77,7 @@ def train_eval(args, wandb_run):
             skorch.callbacks.EpochScoring(
                 skorch_accuracy, lower_is_better=False, name="valid_accuracy"
             ),
-            skorch.callbacks.EarlyStopping(),
+            skorch.callbacks.EarlyStopping(patience=20),
             skorch.callbacks.ProgressBar(),
             WandbLogger(wandb_run),
         ],
