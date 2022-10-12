@@ -15,4 +15,9 @@ Configure your Conda environment using the `environment.yml` file.
 
 ## Usage
 
-Work in Progress.
+### Finetuning the models
+To finetune the models we have created a seperate notebook in the following path: `notebooks/finetuning_(xl)mbert.py`.
+
+All models in the report that have been finetuned have been trained in this notebook. 
+This was done such that the main training framework in this repository would not have to be overhauled specifically for finetuning.
+The notebook provides explanation on how to run it.
