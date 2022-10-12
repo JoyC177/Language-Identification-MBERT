@@ -1,3 +1,4 @@
+import pickle
 import unicodedata
 from collections import Counter
 from enum import Enum, auto
@@ -10,6 +11,7 @@ UNICODE_CATEGORIES = ["Zs", "Po", "Lu", "Ll", "Pd", "Ps", "Pe", "Lo", "Mn", "Pf"
 
 class Feature(Enum):
     UNICODE_CATEGORY = auto()
+    LETTERS_COUNT = auto()
 
 
 class FeaturesExtractor:
@@ -30,10 +32,16 @@ class FeaturesExtractor:
         self.unicode_categories = unicode_categories
         self.normalize = normalize
 
+        if Feature.LETTERS_COUNT in self.features:
+            with open("data/letters.pickle", "rb") as f:
+                self.letters = pickle.load(f)
+
     def process_sentence(self, paragraph: str):
         features = [torch.empty(0)]
         if Feature.UNICODE_CATEGORY in self.features:
             features.append(self.unicode_features(paragraph))
+        if Feature.LETTERS_COUNT in self.features:
+            features.append(self.letters_count(paragraph))
 
         return torch.concat(features)
 
@@ -61,3 +69,15 @@ class FeaturesExtractor:
             return data / torch.sum(data)
         else:
             return data
+
+    def letters_count(self, paragraph):
+        data = torch.zeros(len(self.letters))
+
+        counter = Counter(char for char in paragraph)
+        for idx, letter in enumerate(self.letters):
+            data[idx] = counter.get(letter, 0)
+
+        # normalize the data to percentage of the sentence exists of
+        if torch.sum(data) == 0:
+            return data
+        return data / torch.sum(data)

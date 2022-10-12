@@ -14,7 +14,7 @@ class ClassifierHead(torch.nn.Module):
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.hidden_dims = hidden_dims
-        self.activation = activation
+        self.activation = activation()
         self.dropout_prob = dropout_prob
 
         dims = [input_dim] + hidden_dims + [output_dim]
