@@ -1,7 +1,7 @@
 import argparse
 from locale import normalize
 import os
-import time
+from pickle import TRUE
 from pathlib import Path
 
 import numpy as np
@@ -181,7 +181,7 @@ def parse_args():
     group.add_argument(
         "--normalize",
         type=bool,
-        default=True,
+        default=False,
         help="Normalise the Unicode categories to sentence ratios",
     )
 
