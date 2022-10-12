@@ -8,6 +8,7 @@ import torch
 from tqdm.auto import tqdm
 
 UNICODE_CATEGORIES = ["Zs", "Po", "Lu", "Ll", "Pd", "Ps", "Pe", "Lo", "Mn", "Pf"]
+LETTER_CATEGORIES = ["Lu", "Ll", "Lt", "Lm"]  # "Lo"
 
 class Feature(Enum):
     UNICODE_CATEGORY = auto()
@@ -19,7 +20,7 @@ class FeaturesExtractor:
         self,
         features: Optional[List[Union[Feature, str]]] = None,
         unicode_categories: List[str] = UNICODE_CATEGORIES,
-        normalize: bool = True
+        normalize: bool = False,
     ):
         if features is None:
             features = []

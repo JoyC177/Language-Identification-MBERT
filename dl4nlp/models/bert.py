@@ -31,8 +31,12 @@ def generate_bert_embeddings(
             ).to(DEVICE)
             output = model(**encoded_input)
 
+            # Take for the 0 layer the average of the tokens minus the CLS one
+            stacked = torch.stack(output.hidden_states)
+            stacked[0,:,0,:] = (torch.sum(stacked[0], 1) - stacked[0,:,0,:]) / (stacked.shape[2]-1)
+
             # Take [CLS] token embedding of specific layers or the last one.
-            cls_embeddings = torch.stack(output.hidden_states)[:, :, 0, :].cpu()
+            cls_embeddings = stacked[:, :, 0, :].cpu()
 
             # Store the embeddings
             embeddings.append(cls_embeddings)
