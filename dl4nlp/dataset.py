@@ -7,9 +7,13 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-from .models.bert import MBERT_MODEL, NUM_LAYERS, XLMBERT_MODEL, generate_bert_embeddings, \
-    load_model
-
+from .models.bert import (
+    MBERT_MODEL,
+    NUM_LAYERS,
+    XLMBERT_MODEL,
+    generate_bert_embeddings,
+    load_model,
+)
 
 DATASET_DIR = "data/wili-2018-split/"
 EMBEDDINGS_DIR = "embeddings/"
@@ -109,8 +113,10 @@ class DataModule:
         del self.bert_tokenizer
 
     def _get_bert_embeddings(self, split_name: str, dataset: "WiliDataset"):
-        embeddings_file = self.embeddings_dir / EMBEDDINGS_FNAME.format(self.model_name, split_name)
-        
+        embeddings_file = self.embeddings_dir / EMBEDDINGS_FNAME.format(
+            self.model_name, split_name
+        )
+
         if embeddings_file.exists():
             with h5py.File(embeddings_file, "r") as h5f:
                 embeddings = torch.from_numpy(h5f[f"l{self.embeddings_layer}"][:])

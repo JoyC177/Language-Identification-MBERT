@@ -1,7 +1,5 @@
 import argparse
-from locale import normalize
 import os
-from pickle import TRUE
 from pathlib import Path
 
 import numpy as np
@@ -18,12 +16,12 @@ import wandb
 from dl4nlp.dataset import DATASET_DIR, DataModule
 from dl4nlp.features_extractor import UNICODE_CATEGORIES, Feature, FeaturesExtractor
 from dl4nlp.models import probe
-from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL, XLMBERT_MODEL, NUM_LAYERS
+from dl4nlp.models.bert import EMBEDDINGS_DIR, MBERT_MODEL, NUM_LAYERS, XLMBERT_MODEL
 from dl4nlp.utils import (
     DEVICE,
+    Activation,
     EnumAction,
     Optimizer,
-    Activation,
     WandbLogger,
     pandas_set_option,
     seed_everything,
@@ -46,7 +44,7 @@ def train_eval(args, wandb_run):
     features_extractor = FeaturesExtractor(
         features=args.features,
         unicode_categories=args.unicode_categories,
-        normalize=args.normalize
+        normalize=args.normalize,
     )
     data_module.init_features_embeddings(features_extractor)
 
