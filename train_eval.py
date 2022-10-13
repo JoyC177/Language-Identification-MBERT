@@ -1,5 +1,6 @@
 import argparse
 import os
+import time
 from pathlib import Path
 
 import numpy as np
@@ -86,7 +87,13 @@ def train_eval(args, wandb_run):
     net.fit(data_module.train)
 
     print("Evaluating...")
+    
+    start = time.time()
     predictions = net.predict(data_module.test)
+    end = time.time()
+
+    total_time = end - start
+
     pred_y = np.argmax(predictions, axis=-1)
     true_y = data_module.test.targets
     eval_report = pd.DataFrame(
@@ -111,6 +118,7 @@ def train_eval(args, wandb_run):
     )
     wandb.log(
         {
+            "evaluation/time": total_time,
             "test/accuracy": eval_report.precision.accuracy,
             "test/classification_report": eval_report.reset_index().rename(
                 columns={"index": "lang"}
