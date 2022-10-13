@@ -3,8 +3,12 @@ import torch
 
 class ClassifierHead(torch.nn.Module):
     def __init__(
-        self, input_dim, output_dim, hidden_dims=None, activation=torch.nn.ReLU,
-        dropout_prob=0.0
+        self,
+        input_dim,
+        output_dim,
+        hidden_dims=None,
+        activation=torch.nn.ReLU,
+        dropout_prob=0.0,
     ):
         super().__init__()
         if hidden_dims is None:
@@ -27,12 +31,12 @@ class ClassifierHead(torch.nn.Module):
 
             if self.dropout_prob:
                 layers.append(torch.nn.Dropout(self.dropout_prob))
-        
+
         if self.dropout_prob:
             layers = layers[:-2]  # remove last activation and dropout
         else:
             layers = layers[:-1]  # remove last activation
-            
+
         self.classifier = torch.nn.Sequential(*layers)
 
     def forward(self, x):

@@ -10,10 +10,10 @@ import numpy as np
 import pandas as pd
 import skorch
 import torch
+from joblib import Parallel
 from sklearn.metrics import accuracy_score
 from skorch.callbacks.logging import filter_log_keys
 from tqdm.auto import tqdm
-from joblib import Parallel
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

@@ -10,6 +10,7 @@ from tqdm.auto import tqdm
 UNICODE_CATEGORIES = ["Zs", "Po", "Lu", "Ll", "Pd", "Ps", "Pe", "Lo", "Mn", "Pf"]
 LETTER_CATEGORIES = ["Lu", "Ll", "Lt", "Lm"]  # "Lo"
 
+
 class Feature(Enum):
     UNICODE_CATEGORY = auto()
     LETTERS_COUNT = auto()
