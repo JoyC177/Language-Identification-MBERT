@@ -33,7 +33,7 @@ WANDB_MODE=offline python train_eval.py \
 ```
 We use [wandb.ai](https://wandb.ai) to track our experiments. If you don't have it configured, you can temporarily disable it using environmental variable `WANDB_MODE=offline`.
 ### Finetuning the models
-To finetune the models we have created a separate notebook in the following path: `notebooks/finetuning_(xl)mbert.py`.
+To finetune the models we have created a separate notebook in the following path: `notebooks/Finetuning (xl)mbert.ipynb`.
 
 All models in the report that have been finetuned have been trained in this notebook. 
 This was done such that the main training framework in this repository would not have to be overhauled specifically for finetuning.
